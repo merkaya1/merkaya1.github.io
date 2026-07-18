@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hesap Silme – Spykon</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d0f23;
+      --surface: #131629;
+      --border: #232741;
+      --accent: #f2b33d;
+      --accent2: #c73e5e;
+      --text: #eef0f8;
+      --muted: #767e9c;
+      --success: #3ecf8e;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Sora', sans-serif;
+      font-size: 15px;
+      line-height: 1.75;
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(242,179,61,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(242,179,61,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 60px 24px 100px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .header {
+      margin-bottom: 56px;
+      padding-bottom: 40px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(199,62,94,0.12);
+      border: 1px solid rgba(199,62,94,0.3);
+      color: #e56b8c;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      padding: 6px 14px;
+      border-radius: 100px;
+      margin-bottom: 24px;
+    }
+
+    .badge::before {
+      content: '';
+      width: 6px; height: 6px;
+      background: #e56b8c;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    h1 {
+      font-size: clamp(28px, 5vw, 42px);
+      font-weight: 700;
+      line-height: 1.15;
+      background: linear-gradient(135deg, var(--text) 30%, var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 16px;
+    }
+
+    .meta {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      color: var(--muted);
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .meta span { display: flex; align-items: center; gap: 6px; }
+
+    .section {
+      margin-bottom: 48px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
+
+    .section:hover { border-color: rgba(242,179,61,0.3); }
+
+    .section-header {
+      padding: 20px 28px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .section-num {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      color: var(--accent);
+      background: rgba(242,179,61,0.1);
+      border: 1px solid rgba(242,179,61,0.2);
+      padding: 3px 10px;
+      border-radius: 6px;
+      flex-shrink: 0;
+    }
+
+    .section h2 {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .section-body {
+      padding: 24px 28px;
+      color: #adb4cc;
+    }
+
+    .section-body p { margin-bottom: 14px; }
+    .section-body p:last-child { margin-bottom: 0; }
+
+    .steps { counter-reset: step; margin: 16px 0; }
+
+    .step {
+      display: flex;
+      gap: 16px;
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(35,39,65,0.8);
+      align-items: flex-start;
+    }
+
+    .step:last-child { border-bottom: none; }
+
+    .step::before {
+      counter-increment: step;
+      content: counter(step);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 13px;
+      font-weight: 600;
+      color: #1a1200;
+      background: var(--accent);
+      width: 26px; height: 26px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 13px;
+    }
+
+    .data-table th {
+      text-align: left;
+      padding: 10px 14px;
+      background: rgba(242,179,61,0.06);
+      color: var(--accent);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .data-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(35,39,65,0.8);
+      color: #adb4cc;
+      vertical-align: top;
+    }
+
+    .data-table tr:last-child td { border-bottom: none; }
+
+    .highlight {
+      background: rgba(199,62,94,0.08);
+      border-left: 3px solid var(--accent2);
+      padding: 16px 20px;
+      border-radius: 0 10px 10px 0;
+      margin: 16px 0;
+      font-size: 14px;
+      color: var(--text);
+    }
+
+    .contact-card {
+      background: linear-gradient(135deg, rgba(242,179,61,0.08), rgba(199,62,94,0.08));
+      border: 1px solid rgba(242,179,61,0.2);
+      border-radius: 16px;
+      padding: 32px;
+      text-align: center;
+      margin-top: 48px;
+    }
+
+    .contact-card h3 {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .contact-card p { color: var(--muted); margin-bottom: 20px; font-size: 14px; }
+
+    .contact-card a {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--accent);
+      color: #1a1200;
+      text-decoration: none;
+      padding: 12px 28px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 14px;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+
+    .contact-card a:hover { opacity: 0.85; transform: translateY(-1px); }
+
+    footer {
+      margin-top: 60px;
+      padding-top: 32px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      font-family: 'IBM Plex Mono', monospace;
+    }
+
+    @media (max-width: 600px) {
+      .section-header { padding: 16px 20px; }
+      .section-body { padding: 20px; }
+      .data-table { font-size: 12px; }
+      .data-table th, .data-table td { padding: 8px 10px; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="badge">HESAP SİLME</div>
+    <h1>Hesabınızı Nasıl Silersiniz?</h1>
+    <div class="meta">
+      <span>📅 Son güncelleme: 18 Temmuz 2026</span>
+      <span>🕵️ Spykon – Aramızdaki Casus</span>
+      <span>🌐 Türkçe</span>
+    </div>
+  </div>
+
+  <!-- 1 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <h2>Uygulama İçinden Silme (Önerilen — Anında)</h2>
+    </div>
+    <div class="section-body">
+      <p>Hesabınızı ve tüm verilerinizi uygulama içinden, <strong style="color:var(--text);">anında ve kalıcı olarak</strong> silebilirsiniz:</p>
+      <div class="steps">
+        <div class="step">Uygulamayı açın ve Google hesabınızla giriş yapın</div>
+        <div class="step">Ana ekranın sağ üst köşesindeki <strong style="color:var(--text);">avatarınıza</strong> dokunun</div>
+        <div class="step">Açılan menüde <strong style="color:var(--text);">"Hesabımı Sil"</strong> seçeneğine dokunun</div>
+        <div class="step">Onay ekranında silme işlemini onaylayın</div>
+      </div>
+      <div class="highlight">
+        ⚠️ Bu işlem <strong>geri alınamaz</strong>. Silme tamamlandığında oturumunuz kapatılır; aynı Google hesabıyla tekrar giriş yaparsanız sıfırdan yeni bir hesap oluşturulur.
+      </div>
+    </div>
+  </div>
+
+  <!-- 2 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <h2>Hangi Veriler Silinir?</h2>
+    </div>
+    <div class="section-body">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Veri</th>
+            <th>Ne Zaman Silinir</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Profil bilgileri (ad, e-posta, avatar seçimi)</td>
+            <td>Anında</td>
+          </tr>
+          <tr>
+            <td>Oyun istatistikleri</td>
+            <td>Anında</td>
+          </tr>
+          <tr>
+            <td>Giriş / kimlik doğrulama kaydı</td>
+            <td>Anında</td>
+          </tr>
+          <tr>
+            <td>Geçmiş oda kayıtlarındaki görünen ad</td>
+            <td>En geç 2 gün içinde (odaların otomatik temizliğiyle)</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>Silme sonrasında hiçbir kişisel veriniz sistemde tutulmaz.</p>
+    </div>
+  </div>
+
+  <!-- 3 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <h2>Uygulamaya Erişemiyorsanız</h2>
+    </div>
+    <div class="section-body">
+      <p>Uygulamayı silmişseniz veya giriş yapamıyorsanız, silme talebinizi e-posta ile iletebilirsiniz. Talebinizi doğrulayabilmemiz için e-postayı <strong style="color:var(--text);">uygulamada kayıtlı Google hesabınızın adresinden</strong> göndermeniz gerekir.</p>
+      <div class="highlight">
+        Talebinizi <a href="mailto:erkaya.mustafa1@gmail.com?subject=Spykon%20Hesap%20Silme%20Talebi" style="color:var(--accent);text-decoration:none;">erkaya.mustafa1@gmail.com</a> adresine "Spykon Hesap Silme Talebi" konusuyla iletin. Talebiniz en geç <strong>30 gün</strong> içinde işleme alınır ve sonuç size bildirilir.
+      </div>
+    </div>
+  </div>
+
+  <div class="contact-card">
+    <h3>Sorularınız mı var?</h3>
+    <p>Hesap silme veya verilerinizle ilgili her türlü sorunuz için bizimle iletişime geçebilirsiniz.</p>
+    <a href="mailto:erkaya.mustafa1@gmail.com">✉️ erkaya.mustafa1@gmail.com</a>
+  </div>
+
+  <footer>
+    <p>© 2026 Mustafa Erkaya · Spykon · Tüm hakları saklıdır</p>
+    <p style="margin-top:8px;">
+      <a href="privacy-policy.html" style="color:var(--accent);text-decoration:none;">Gizlilik Politikası →</a>
+      &nbsp;·&nbsp;
+      <a href="terms-of-service.html" style="color:var(--accent);text-decoration:none;">Kullanım Koşulları →</a>
+    </p>
+  </footer>
+
+</div>
+</body>
+</html>

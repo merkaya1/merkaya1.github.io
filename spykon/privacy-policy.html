@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gizlilik Politikası – Spykon</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d0f23;
+      --surface: #131629;
+      --border: #232741;
+      --accent: #f2b33d;
+      --accent2: #c73e5e;
+      --text: #eef0f8;
+      --muted: #767e9c;
+      --success: #3ecf8e;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Sora', sans-serif;
+      font-size: 15px;
+      line-height: 1.75;
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(242,179,61,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(242,179,61,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 60px 24px 100px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .header {
+      margin-bottom: 56px;
+      padding-bottom: 40px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(242,179,61,0.1);
+      border: 1px solid rgba(242,179,61,0.25);
+      color: var(--accent);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      padding: 6px 14px;
+      border-radius: 100px;
+      margin-bottom: 24px;
+    }
+
+    .badge::before {
+      content: '';
+      width: 6px; height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    h1 {
+      font-size: clamp(28px, 5vw, 42px);
+      font-weight: 700;
+      line-height: 1.15;
+      background: linear-gradient(135deg, var(--text) 30%, var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 16px;
+    }
+
+    .meta {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      color: var(--muted);
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .meta span { display: flex; align-items: center; gap: 6px; }
+
+    .section {
+      margin-bottom: 48px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
+
+    .section:hover { border-color: rgba(242,179,61,0.3); }
+
+    .section-header {
+      padding: 20px 28px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .section-num {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      color: var(--accent);
+      background: rgba(242,179,61,0.1);
+      border: 1px solid rgba(242,179,61,0.2);
+      padding: 3px 10px;
+      border-radius: 6px;
+      flex-shrink: 0;
+    }
+
+    .section h2 {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .section-body {
+      padding: 24px 28px;
+      color: #adb4cc;
+    }
+
+    .section-body p { margin-bottom: 14px; }
+    .section-body p:last-child { margin-bottom: 0; }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 13px;
+    }
+
+    .data-table th {
+      text-align: left;
+      padding: 10px 14px;
+      background: rgba(242,179,61,0.06);
+      color: var(--accent);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .data-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(35,39,65,0.8);
+      color: #adb4cc;
+      vertical-align: top;
+    }
+
+    .data-table tr:last-child td { border-bottom: none; }
+
+    .tag {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 100px;
+      font-size: 11px;
+      font-family: 'IBM Plex Mono', monospace;
+    }
+
+    .tag-gold { background: rgba(242,179,61,0.12); color: var(--accent); }
+    .tag-green { background: rgba(62,207,142,0.12); color: var(--success); }
+    .tag-red { background: rgba(199,62,94,0.15); color: #e56b8c; }
+
+    .highlight {
+      background: rgba(242,179,61,0.06);
+      border-left: 3px solid var(--accent);
+      padding: 16px 20px;
+      border-radius: 0 10px 10px 0;
+      margin: 16px 0;
+      font-size: 14px;
+      color: var(--text);
+    }
+
+    .contact-card {
+      background: linear-gradient(135deg, rgba(242,179,61,0.08), rgba(199,62,94,0.08));
+      border: 1px solid rgba(242,179,61,0.2);
+      border-radius: 16px;
+      padding: 32px;
+      text-align: center;
+      margin-top: 48px;
+    }
+
+    .contact-card h3 {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .contact-card p { color: var(--muted); margin-bottom: 20px; font-size: 14px; }
+
+    .contact-card a {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--accent);
+      color: #1a1200;
+      text-decoration: none;
+      padding: 12px 28px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 14px;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+
+    .contact-card a:hover { opacity: 0.85; transform: translateY(-1px); }
+
+    footer {
+      margin-top: 60px;
+      padding-top: 32px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      font-family: 'IBM Plex Mono', monospace;
+    }
+
+    @media (max-width: 600px) {
+      .section-header { padding: 16px 20px; }
+      .section-body { padding: 20px; }
+      .data-table { font-size: 12px; }
+      .data-table th, .data-table td { padding: 8px 10px; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="badge">GİZLİLİK POLİTİKASI</div>
+    <h1>Verileriniz Nasıl Korunuyor?</h1>
+    <div class="meta">
+      <span>📅 Son güncelleme: 18 Temmuz 2026</span>
+      <span>🕵️ Spykon – Aramızdaki Casus</span>
+      <span>🌐 Türkçe</span>
+    </div>
+  </div>
+
+  <!-- 1 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <h2>Genel Bilgilendirme</h2>
+    </div>
+    <div class="section-body">
+      <p>Bu Gizlilik Politikası, <strong style="color:var(--text);">Spykon – Aramızdaki Casus</strong> mobil uygulamasını ("Uygulama") kullanan kişilerin kişisel verilerinin nasıl toplandığını, kullanıldığını ve korunduğunu açıklamaktadır.</p>
+      <p>Uygulama; bireysel geliştirici <strong style="color:var(--text);">Mustafa Erkaya</strong> tarafından geliştirilmektedir. Uygulamayı kullanarak bu politikada belirtilen veri işleme faaliyetlerini kabul etmiş sayılırsınız. Politikamızı kabul etmiyorsanız lütfen uygulamayı kullanmayınız.</p>
+    </div>
+  </div>
+
+  <!-- 2 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <h2>Toplanan Veriler</h2>
+    </div>
+    <div class="section-body">
+      <p>Uygulamayı kullanırken aşağıdaki veriler toplanmaktadır:</p>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Veri Türü</th>
+            <th>Kaynak</th>
+            <th>Amaç</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Ad, soyad</td>
+            <td>Google Hesabı</td>
+            <td>Profil görüntüleme, oda içi oyuncu listesi</td>
+          </tr>
+          <tr>
+            <td>E-posta adresi</td>
+            <td>Google Hesabı</td>
+            <td>Kimlik doğrulama</td>
+          </tr>
+          <tr>
+            <td>Avatar seçimi</td>
+            <td>Uygulama içi</td>
+            <td>Profil ve oyun ekranlarında görünüm</td>
+          </tr>
+          <tr>
+            <td>Oyun istatistikleri (oynanan/kazanılan oyun vb.)</td>
+            <td>Uygulama içi</td>
+            <td>Kişisel istatistik ekranı</td>
+          </tr>
+          <tr>
+            <td>Oda ve oyun kayıtları (oda kodu, oyuncu listesi, roller, oylar)</td>
+            <td>Uygulama içi</td>
+            <td>Oyunun işleyişi — <strong style="color:var(--text);">geçicidir, en geç 2 gün içinde otomatik silinir</strong></td>
+          </tr>
+          <tr>
+            <td>Çökme ve hata kayıtları</td>
+            <td>Sentry</td>
+            <td>Uygulama hatalarının tespiti ve giderilmesi</td>
+          </tr>
+          <tr>
+            <td>Cihaz bütünlük doğrulaması</td>
+            <td>Google Play Integrity</td>
+            <td>Kötüye kullanım ve sahte istemci koruması (kimlik içermez)</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="highlight">
+        Uygulamayı kullanmak için yalnızca Google hesabınızla giriş yapmanız yeterlidir. Ek form veya kayıt bilgisi talep edilmez. <strong>Uygulamada reklam yoktur; reklam kimliği (Advertising ID) toplanmaz.</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <h2>Verilerin Kullanım Amacı</h2>
+    </div>
+    <div class="section-body">
+      <p>Toplanan veriler yalnızca aşağıdaki amaçlarla kullanılmaktadır:</p>
+      <p>
+        <span class="tag tag-gold">Kimlik Doğrulama</span> Google Sign-In ile güvenli giriş sağlamak<br/><br/>
+        <span class="tag tag-green">Oyun Deneyimi</span> Oda kurma/katılma, rol dağıtımı, oylama ve kişisel istatistikler<br/><br/>
+        <span class="tag tag-red">Güvenlik &amp; Kararlılık</span> Çökme takibi (Sentry) ve sahte istemci koruması (Play Integrity)
+      </p>
+      <p style="margin-top:16px;">Verileriniz üçüncü taraflarla pazarlama veya ticari amaçlarla paylaşılmamaktadır.</p>
+    </div>
+  </div>
+
+  <!-- 4 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <h2>Firebase, Google &amp; Sentry Hizmetleri</h2>
+    </div>
+    <div class="section-body">
+      <p>Uygulama, Google LLC tarafından sağlanan <strong style="color:var(--text);">Firebase</strong> altyapısını kullanmaktadır. Firebase; kimlik doğrulama (Authentication), veritabanı (Firestore), sunucu fonksiyonları (Cloud Functions) ve uygulama bütünlüğü (App Check / Play Integrity) hizmetleri sunar. Sunucu bölgemiz <strong style="color:var(--text);">ABD (us-central1)</strong>'dir.</p>
+      <p>Çökme kayıtları için <strong style="color:var(--text);">Sentry</strong> (Functional Software, Inc.) kullanılmaktadır; verileri Avrupa Birliği bölgesinde saklanır ve yalnızca hata ayıklama amacıyla işlenir.</p>
+      <p>Google'ın gizlilik politikası: <a href="https://policies.google.com/privacy" style="color:var(--accent);text-decoration:none;">policies.google.com/privacy</a> · Sentry gizlilik politikası: <a href="https://sentry.io/privacy/" style="color:var(--accent);text-decoration:none;">sentry.io/privacy</a></p>
+    </div>
+  </div>
+
+  <!-- 5 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <h2>Veri Saklama &amp; Silme</h2>
+    </div>
+    <div class="section-body">
+      <p>Verileriniz, hesabınız aktif olduğu sürece sistemimizde saklanır. Oda ve oyun kayıtları geçicidir; oluşturulduktan <strong style="color:var(--text);">en geç 2 gün sonra otomatik olarak silinir</strong>.</p>
+      <p>Hesabınızı <strong style="color:var(--text);">uygulama içinden anında ve kalıcı olarak</strong> silebilirsiniz: Ana ekran → sağ üstteki avatar → <em>Hesabımı Sil</em>. Bu işlem profil bilgilerinizi, avatar seçiminizi, istatistiklerinizi ve giriş kaydınızı kalıcı olarak siler.</p>
+      <div class="highlight">
+        Adım adım silme rehberi ve uygulamaya erişemeyenler için e-posta ile talep yolu: <a href="hesap-silme.html" style="color:var(--accent);text-decoration:none;">Hesap Silme sayfası →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">06</span>
+      <h2>Reklam &amp; Uygulama İçi Satın Alma</h2>
+    </div>
+    <div class="section-body">
+      <p>Spykon <strong style="color:var(--text);">reklam içermez</strong>. Uygulamada reklam SDK'sı bulunmaz ve cihazınızın reklam kimliği (Advertising ID) toplanmaz.</p>
+      <p>Uygulamada şu an <strong style="color:var(--text);">uygulama içi satın alma da bulunmamaktadır</strong>; tüm içerik ücretsizdir. Gelecekte reklam veya satın alma eklenirse bu politika, ilgili özellik yayına alınmadan önce güncellenir ve sayfanın "Son güncelleme" tarihi yenilenir.</p>
+    </div>
+  </div>
+
+  <!-- 7 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">07</span>
+      <h2>Çocukların Gizliliği</h2>
+    </div>
+    <div class="section-body">
+      <p>Uygulamamız 13 yaşın altındaki çocuklara yönelik değildir ve bu yaş grubundan bilerek kişisel veri toplamayız. 13 yaşın altındaki bir kullanıcının veri bıraktığını fark edersek ilgili verileri derhal sileriz.</p>
+    </div>
+  </div>
+
+  <!-- 8 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">08</span>
+      <h2>Politika Güncellemeleri</h2>
+    </div>
+    <div class="section-body">
+      <p>Bu politika zaman zaman güncellenebilir. Önemli değişiklikler uygulama içi bildirim veya e-posta ile duyurulur. Güncel politikaya her zaman bu sayfa üzerinden ulaşabilirsiniz.</p>
+    </div>
+  </div>
+
+  <div class="contact-card">
+    <h3>Sorularınız mı var?</h3>
+    <p>Gizlilik politikamız veya verilerinizle ilgili her türlü sorunuz için bizimle iletişime geçebilirsiniz.</p>
+    <a href="mailto:erkaya.mustafa1@gmail.com">✉️ erkaya.mustafa1@gmail.com</a>
+  </div>
+
+  <footer>
+    <p>© 2026 Mustafa Erkaya · Spykon · Tüm hakları saklıdır</p>
+    <p style="margin-top:8px;">
+      <a href="terms-of-service.html" style="color:var(--accent);text-decoration:none;">Kullanım Koşulları →</a>
+      &nbsp;·&nbsp;
+      <a href="hesap-silme.html" style="color:var(--accent);text-decoration:none;">Hesap Silme →</a>
+    </p>
+  </footer>
+
+</div>
+</body>
+</html>

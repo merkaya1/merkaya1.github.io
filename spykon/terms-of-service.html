@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kullanım Koşulları – Spykon</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d0f23;
+      --surface: #131629;
+      --border: #232741;
+      --accent: #f2b33d;
+      --accent2: #c73e5e;
+      --text: #eef0f8;
+      --muted: #767e9c;
+      --success: #3ecf8e;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Sora', sans-serif;
+      font-size: 15px;
+      line-height: 1.75;
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(242,179,61,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(242,179,61,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 60px 24px 100px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .header {
+      margin-bottom: 56px;
+      padding-bottom: 40px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(242,179,61,0.1);
+      border: 1px solid rgba(242,179,61,0.25);
+      color: var(--accent);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      padding: 6px 14px;
+      border-radius: 100px;
+      margin-bottom: 24px;
+    }
+
+    .badge::before {
+      content: '';
+      width: 6px; height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    h1 {
+      font-size: clamp(28px, 5vw, 42px);
+      font-weight: 700;
+      line-height: 1.15;
+      background: linear-gradient(135deg, var(--text) 30%, var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 16px;
+    }
+
+    .meta {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      color: var(--muted);
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .meta span { display: flex; align-items: center; gap: 6px; }
+
+    .section {
+      margin-bottom: 48px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
+
+    .section:hover { border-color: rgba(242,179,61,0.3); }
+
+    .section-header {
+      padding: 20px 28px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .section-num {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      color: var(--accent);
+      background: rgba(242,179,61,0.1);
+      border: 1px solid rgba(242,179,61,0.2);
+      padding: 3px 10px;
+      border-radius: 6px;
+      flex-shrink: 0;
+    }
+
+    .section h2 {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .section-body {
+      padding: 24px 28px;
+      color: #adb4cc;
+    }
+
+    .section-body p { margin-bottom: 14px; }
+    .section-body p:last-child { margin-bottom: 0; }
+
+    .section-body ul {
+      margin: 0 0 14px 20px;
+    }
+
+    .section-body li { margin-bottom: 8px; }
+
+    .highlight {
+      background: rgba(242,179,61,0.06);
+      border-left: 3px solid var(--accent);
+      padding: 16px 20px;
+      border-radius: 0 10px 10px 0;
+      margin: 16px 0;
+      font-size: 14px;
+      color: var(--text);
+    }
+
+    .contact-card {
+      background: linear-gradient(135deg, rgba(242,179,61,0.08), rgba(199,62,94,0.08));
+      border: 1px solid rgba(242,179,61,0.2);
+      border-radius: 16px;
+      padding: 32px;
+      text-align: center;
+      margin-top: 48px;
+    }
+
+    .contact-card h3 {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .contact-card p { color: var(--muted); margin-bottom: 20px; font-size: 14px; }
+
+    .contact-card a {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--accent);
+      color: #1a1200;
+      text-decoration: none;
+      padding: 12px 28px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 14px;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+
+    .contact-card a:hover { opacity: 0.85; transform: translateY(-1px); }
+
+    footer {
+      margin-top: 60px;
+      padding-top: 32px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      font-family: 'IBM Plex Mono', monospace;
+    }
+
+    @media (max-width: 600px) {
+      .section-header { padding: 16px 20px; }
+      .section-body { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="badge">KULLANIM KOŞULLARI</div>
+    <h1>Oyunun Kuralları Belli Olsun</h1>
+    <div class="meta">
+      <span>📅 Son güncelleme: 18 Temmuz 2026</span>
+      <span>🕵️ Spykon – Aramızdaki Casus</span>
+      <span>🌐 Türkçe</span>
+    </div>
+  </div>
+
+  <!-- 1 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <h2>Kabul ve Kapsam</h2>
+    </div>
+    <div class="section-body">
+      <p>Bu Kullanım Koşulları, <strong style="color:var(--text);">Spykon – Aramızdaki Casus</strong> mobil uygulamasının ("Uygulama") kullanımını düzenler. Uygulama, bireysel geliştirici <strong style="color:var(--text);">Mustafa Erkaya</strong> tarafından sunulmaktadır.</p>
+      <p>Uygulamayı indirerek veya kullanarak bu koşulları kabul etmiş sayılırsınız. Koşulları kabul etmiyorsanız lütfen uygulamayı kullanmayınız.</p>
+    </div>
+  </div>
+
+  <!-- 2 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <h2>Hesap ve Giriş</h2>
+    </div>
+    <div class="section-body">
+      <p>Uygulamayı kullanmak için Google hesabınızla giriş yapmanız gerekir. Hesabınızın güvenliğinden ve hesabınız üzerinden gerçekleştirilen işlemlerden siz sorumlusunuz.</p>
+      <p>Hesabınızı dilediğiniz an uygulama içinden kalıcı olarak silebilirsiniz (Ana ekran → avatar → <em>Hesabımı Sil</em>). Ayrıntılar için <a href="hesap-silme.html" style="color:var(--accent);text-decoration:none;">Hesap Silme sayfasına</a> bakabilirsiniz.</p>
+    </div>
+  </div>
+
+  <!-- 3 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <h2>Oyun Kuralları &amp; Adil Kullanım</h2>
+    </div>
+    <div class="section-body">
+      <p>Spykon, 3-8 kişiyle yüz yüze oynanan bir sosyal parti oyunudur. Bir oyuncu oda kurar, diğerleri oda koduyla katılır; her turda bir oyuncu gizlice "casus" olur.</p>
+      <p>Oyunun keyfi dürüst oynanmaya dayanır. Rol bilgisini oyun dışı yollarla paylaşmak (ekran göstermek, mesaj atmak vb.) oyunun doğasını bozar — kural ihlalinden öte, arkadaşlarınıza haksızlıktır.</p>
+      <div class="highlight">
+        Oda ve oyun kayıtları geçicidir; oluşturulduktan en geç 2 gün sonra otomatik silinir.
+      </div>
+    </div>
+  </div>
+
+  <!-- 4 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <h2>Yasak Davranışlar</h2>
+    </div>
+    <div class="section-body">
+      <p>Aşağıdaki davranışlar yasaktır ve tespiti hâlinde hesabın kapatılmasına yol açabilir:</p>
+      <ul>
+        <li>Uygulamanın değiştirilmiş (modifiye) sürümlerini kullanmak veya dağıtmak</li>
+        <li>Sunuculara yetkisiz erişim denemek, oyun akışını teknik yollarla manipüle etmek</li>
+        <li>Başka bir kişinin hesabını izinsiz kullanmak</li>
+        <li>Görünen ad veya avatar üzerinden hakaret, taciz veya yanıltıcı kimlik kullanımı</li>
+        <li>Uygulamayı hukuka aykırı herhangi bir amaçla kullanmak</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 5 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <h2>Ücretlendirme</h2>
+    </div>
+    <div class="section-body">
+      <p>Uygulama <strong style="color:var(--text);">ücretsizdir ve reklam içermez</strong>. Şu an uygulama içi satın alma bulunmamaktadır.</p>
+      <p>Gelecekte ücretli özellikler veya satın almalar eklenirse, bu koşullar ve <a href="privacy-policy.html" style="color:var(--accent);text-decoration:none;">Gizlilik Politikası</a> ilgili özellik yayına alınmadan önce güncellenir.</p>
+    </div>
+  </div>
+
+  <!-- 6 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">06</span>
+      <h2>Fikri Mülkiyet</h2>
+    </div>
+    <div class="section-body">
+      <p>Uygulamanın adı, logosu, tasarımı, mekan setleri, görselleri ve yazılımı Mustafa Erkaya'ya aittir. Uygulama içeriği; kopyalanamaz, dağıtılamaz veya izinsiz ticari amaçla kullanılamaz.</p>
+    </div>
+  </div>
+
+  <!-- 7 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">07</span>
+      <h2>Hizmetin Değiştirilmesi &amp; Sonlandırılması</h2>
+    </div>
+    <div class="section-body">
+      <p>Uygulamanın özellikleri önceden bildirimle veya bildirimsiz değiştirilebilir, geliştirilebilir veya sonlandırılabilir. Teknik zorunluluklar (bakım, güncelleme, altyapı sorunları) nedeniyle hizmette kesintiler yaşanabilir.</p>
+    </div>
+  </div>
+
+  <!-- 8 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">08</span>
+      <h2>Sorumluluk Sınırlaması</h2>
+    </div>
+    <div class="section-body">
+      <p>Uygulama "olduğu gibi" sunulmaktadır. Kesintisiz veya hatasız çalışacağı garanti edilmez. Uygulamanın kullanımından doğabilecek dolaylı zararlardan, yürürlükteki hukukun izin verdiği azami ölçüde, sorumluluk kabul edilmez.</p>
+    </div>
+  </div>
+
+  <!-- 9 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">09</span>
+      <h2>Uygulanacak Hukuk</h2>
+    </div>
+    <div class="section-body">
+      <p>Bu koşullar Türkiye Cumhuriyeti hukukuna tabidir. Doğabilecek uyuşmazlıklarda Türkiye Cumhuriyeti mahkemeleri ve icra daireleri yetkilidir.</p>
+    </div>
+  </div>
+
+  <div class="contact-card">
+    <h3>Sorularınız mı var?</h3>
+    <p>Kullanım koşullarıyla ilgili her türlü sorunuz için bizimle iletişime geçebilirsiniz.</p>
+    <a href="mailto:erkaya.mustafa1@gmail.com">✉️ erkaya.mustafa1@gmail.com</a>
+  </div>
+
+  <footer>
+    <p>© 2026 Mustafa Erkaya · Spykon · Tüm hakları saklıdır</p>
+    <p style="margin-top:8px;">
+      <a href="privacy-policy.html" style="color:var(--accent);text-decoration:none;">Gizlilik Politikası →</a>
+      &nbsp;·&nbsp;
+      <a href="hesap-silme.html" style="color:var(--accent);text-decoration:none;">Hesap Silme →</a>
+    </p>
+  </footer>
+
+</div>
+</body>
+</html>
